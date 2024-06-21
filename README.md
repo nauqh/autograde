@@ -3,8 +3,44 @@
 ![Python](https://img.shields.io/badge/Python-%230096c7.svg?&style=for-the-badge&logo=python&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Pytest-%233F4F75.svg?style=for-the-badge&logo=plotly&logoColor=white)
 
-**Update** (21 July 2024): Finished M2.1 and M3.1 exams. [Google Colab](https://colab.research.google.com/drive/1oaoiXxOZad97zGUsefFX9PAZ7kKg1G24?usp=sharing).
+**Update** (21 June 2024): Finished M2.1 and M3.1 exams. [Google Colab](https://colab.research.google.com/drive/1oaoiXxOZad97zGUsefFX9PAZ7kKg1G24?usp=sharing).
 
 ## About the project
 
-<img width="500" src="./illustration.webp">
+<img width="500" src="img/illustration.webp">
+
+T.i. is an automated grading system designed to streamline the exam marking process. It leverages sophisticated software to ensure accurate and efficient assessment, saving valuable time for teachning assistants and enhancing the overall grading experience.
+
+## How to use 
+1. Access the system via [Google Colab](https://colab.research.google.com/drive/1oaoiXxOZad97zGUsefFX9PAZ7kKg1G24?usp=sharing)
+   - You will be asked to authorise access to your google drive, please just allow full access
+
+2. Execute the first section to import necessary libraries and authorize the user
+
+3. Select the module you wish to grade, enter the learner's email, and run the cell
+
+4. After the marking process completes, run the subsequent cell to generate the grading report
+
+## Note and assumption
+**General Note**: If the marking is not as expected, please review the learner's submission by opening a new cell and printing their submission. Use the following commands:
+
+```python
+# 's' is combined from the learner's submission
+print(s)
+
+# Alternatively, print the summary to keep track of grading progress
+print(summary)
+```
+
+### 1. Regarding M2.1 - Python Functions Submission
+   - The system assumes that submissions will contain only Python functions. If a learner submits content other than Python functions, the system may be unable to parse it correctly, resulting in a failed grade.
+
+### 2. 🚧Exams in Development - SQL Module:
+   - There is an ongoing issue with extracting learner submissions for the SQL module. To resolve this, I am working on a solution that involves uploading learner submissions to temporary storage and extracting them via an API.
+   - At the end of their exam, learners will be presented with a button to upload their submissions to the cloud.
+   - The system will retrieve the latest submission using the learner's email instead of extracting it from the platform.
+
+<div style="display: flex;">
+  <img width="400" src="img/submit_exam.png" style="margin-right: 10px;">
+  <img width="400" src="img/extract_submission.png">
+</div>
