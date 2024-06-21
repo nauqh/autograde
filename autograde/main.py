@@ -77,26 +77,19 @@ class M21Marker(ExamMarkerBase):
         print(f"{self.exam_name} - EXAM SUMMARY")
 
         score_mapping = {
-            'Correct': {range(1, 9): 4, range(9, 13): 12, range(13, 16): 10},
-            'Partial': {range(1, 9): 2, range(9, 13): 6, range(13, 16): 5},
-            'Incorrect': {range(1, 9): 0, range(9, 13): 0, range(13, 16): 0}
-        }
-
-        max_scores = {
-            'Correct': {range(1, 9): '4/4', range(9, 13): '12/12', range(13, 16): '10/10'},
-            'Partial': {range(1, 9): '2/4', range(9, 13): '6/12', range(13, 16): '5/10'},
-            'Incorrect': {range(1, 9): '0/4', range(9, 13): '0/12', range(13, 16): '0/10'}
+            'Correct': {range(1, 9): (4, '4/4'), range(9, 13): (12, '12/12'), range(13, 16): (10, '10/10')},
+            'Partial': {range(1, 9): (2, '2/4'), range(9, 13): (6, '6/12'), range(13, 16): (5, '5/10')},
+            'Incorrect': {range(1, 9): (0, '0/4'), range(9, 13): (0, '0/12'), range(13, 16): (0, '0/10')},
+            'Not submitted': {range(1, 9): (0, '0/4'), range(9, 13): (0, '0/12'), range(13, 16): (0, '0/10')}
         }
 
         final_score = 0
 
-        for key, value in summary.items():
-            print(f"{key}: {len(value)}")
-            for question in value:
-                score = next(
-                    v for k, v in score_mapping[key].items() if question in k)
-                max_score = next(
-                    v for k, v in max_scores[key].items() if question in k)
+        for status, questions in summary.items():
+            print(f"{status}: {len(questions)}")
+            for question in questions:
+                score, max_score = next(
+                    (v for k, v in score_mapping[status].items() if question in k), (0, '0/0'))
                 print(f"  - Q{question} ({score}/{max_score.split('/')[1]})")
                 final_score += score
 
@@ -145,18 +138,22 @@ class M31Marker(ExamMarkerBase):
         print(f"{self.exam_name} - EXAM SUMMARY")
 
         score_mapping = {
-            'Correct': {range(1, 10): 4, range(11, 14): 4, (10, 14, 15): 14, range(16, 18): 10},
-            'Incorrect': {range(1, 10): 0, range(11, 14): 0, (10, 14, 15): 0, range(16, 18): 0}
+            'Correct': {range(1, 10): (4, '4/4'), range(11, 14): (4, '4/4'),
+                        (10, 14, 15): (14, '14/14'), range(16, 18): (10, '10/10')},
+            'Incorrect': {range(1, 10): (0, '0/4'), range(11, 14): (0, '0/4'),
+                          (10, 14, 15): (0, '0/14'), range(16, 18): (0, '0/10')},
+            'Not submitted': {range(1, 10): (0, '0/4'), range(11, 14): (0, '0/4'),
+                              (10, 14, 15): (0, '0/14'), range(16, 18): (0, '0/10')},
         }
 
         final_score = 0
 
-        for key, value in summary.items():
-            print(f"{key}: {len(value)}")
-            for question in value:
-                score = next(
-                    v for k, v in score_mapping[key].items() if question in k)
-                print(f"  - Q{question} ({score}/{score})")
+        for status, questions in summary.items():
+            print(f"{status}: {len(questions)}")
+            for question in questions:
+                score, max_score = next(
+                    (v for k, v in score_mapping[status].items() if question in k), (0, '0/0'))
+                print(f"  - Q{question} ({score}/{max_score.split('/')[1]})")
                 final_score += score
 
         print(f"FINAL SCORE: {final_score}/100")
@@ -218,18 +215,23 @@ class M12Marker(ExamMarkerBase):
 
 
 if __name__ == "__main__":
-    marker_m21 = M21Marker()
-    submission_m21 = ['A', 'A', 'e', 'B', 'E', 'A,C', 'C,D', 'C']
-    summary_m21 = marker_m21.check_multiple(submission_m21)
-    print(summary_m21)
-    marker_m21.display_summary(summary_m21)
+    # marker_m21 = M21Marker()
+    # submission_m21 = ['A', '', 'c,e', 'B', 'E', 'A,C', 'A,C,D', 'A']
+    # summary_m21 = marker_m21.check_multiple(submission_m21)
+    # print(summary_m21)
+    # marker_m21.display_summary(summary_m21)
 
-    # marker_m31 = M31Marker()
-    # submission_m31 = ['D', 'A', 'A', 'B', 'B',
-    #                   'A', 'C', 'A', 'D', 'C', 'A', 'C']
-    # summary_m31 = marker_m31.check_multiple(submission_m31)
-    # print(summary_m31)
-    # marker_m31.display_summary(summary_m31)
+    marker_m31 = M31Marker()
+    submission_m31 = ['D', 'A', 'A', 'B', 'B',
+                      'A', 'C', 'A', 'D', 'C', 'A', 'C']
+    summary_m31 = marker_m31.check_multiple(submission_m31)
+
+    summary_m31['Incorrect'].append(10)
+    summary_m31['Not submitted'].append(14)
+    summary_m31['Not submitted'].append(15)
+    summary_m31['Not submitted'].append(16)
+    print(summary_m31)
+    marker_m31.display_summary(summary_m31)
 
     # marker_m12 = M12Marker()
     # submission_m12 = ['B', 'B', 'D', 'C', 'D',
