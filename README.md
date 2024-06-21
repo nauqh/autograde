@@ -50,5 +50,5 @@ print(summary)
 </div>
 
 ## Coderschool projects 
-   T.e.o - The Excelent Organizer for Discord channel - [Github repo](https://github.com/nauqh/teo)
-   T.i. - Test Inspector for Automated Exam Grading - [Github repo](https://github.com/nauqh/autograde) 
+- [x] T.e.o - The Excelent Organizer for Discord channel - [Github repo](https://github.com/nauqh/teo)
+- [x]   T.i. - Test Inspector for Automated Exam Grading - [Github repo](https://github.com/nauqh/autograde) 
