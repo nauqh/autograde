@@ -23,6 +23,8 @@ T.i. is an automated grading system designed to streamline the exam marking proc
 
 4. After the marking process completes, run the subsequent cell to generate the grading report
 
+   <img width="500" src="img/run_cell.png">
+
 ## Note on using the system
 **General Note**: If the marking is not as expected, please review the learner's submission by opening a new cell and printing their submission. Use the following commands:
 
