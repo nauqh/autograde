@@ -17,6 +17,8 @@ T.i. is an automated grading system designed to streamline the exam marking proc
 
 2. Execute the first section to import necessary libraries and authorize the user
 
+   <img width="500" src="img/run_install.png">
+
 3. Select the module you wish to grade, enter the learner's email, and run the cell
 
 4. After the marking process completes, run the subsequent cell to generate the grading report
