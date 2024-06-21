@@ -11,7 +11,7 @@
 
 T.i. is an automated grading system designed to streamline the exam marking process. It leverages sophisticated software to ensure accurate and efficient assessment, saving valuable time for teachning assistants and enhancing the overall grading experience.
 
-## How to use 
+## How to grade exam
 1. Access the system via [Google Colab](https://colab.research.google.com/drive/1oaoiXxOZad97zGUsefFX9PAZ7kKg1G24?usp=sharing)
    - You will be asked to authorise access to your google drive, please just allow full access
 
@@ -21,7 +21,7 @@ T.i. is an automated grading system designed to streamline the exam marking proc
 
 4. After the marking process completes, run the subsequent cell to generate the grading report
 
-## Note and assumption
+## Note on using the system
 **General Note**: If the marking is not as expected, please review the learner's submission by opening a new cell and printing their submission. Use the following commands:
 
 ```python
@@ -36,7 +36,7 @@ print(summary)
    - The system assumes that submissions will contain only Python functions. If a learner submits content other than Python functions, the system may be unable to parse it correctly, resulting in a failed grade.
 
 ### 2. 🚧Exams in Development - SQL Module:
-   - There is an ongoing issue with extracting learner submissions for the SQL module. To resolve this, I am working on a solution that involves uploading learner submissions to temporary storage and extracting them via an API.
+   - There is an ongoing issue with extracting learner submissions. To resolve this, I am working on a solution that involves uploading learner submissions to temporary storage and extracting them via an API.
    - At the end of their exam, learners will be presented with a button to upload their submissions to the cloud.
    - The system will retrieve the latest submission using the learner's email instead of extracting it from the platform.
 
