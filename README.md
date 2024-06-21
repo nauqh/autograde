@@ -48,3 +48,7 @@ print(summary)
   <img width="400" src="img/submit_exam.png" style="margin-right: 10px;">
   <img width="400" src="img/extract_submission.png">
 </div>
+
+## Coderschool projects 
+   T.e.o - The Excelent Organizer for Discord channel - [Github repo](https://github.com/nauqh/teo)
+   T.i. - Test Inspector for Automated Exam Grading - [Github repo](https://github.com/nauqh/autograde) 
