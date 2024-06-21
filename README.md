@@ -11,6 +11,21 @@
 
 T.i. is an automated grading system designed to streamline the exam marking process. It leverages sophisticated software to ensure accurate and efficient assessment, saving valuable time for teachning assistants and enhancing the overall grading experience.
 
+The system grades learner exams by performing the following steps:
+
+1. Retrieve the learner's submission from the platform using cspyclient.
+
+2. Grade multiple choice questions:
+   - For single-answer questions: Verify if the learner's submission matches the solution.
+   - For multi-answer questions: Confirm if the learner's submission includes all correct answers as specified in the solution. If one of them does not match, mark as partial correct
+   - For multi-correct questions (questions allowing more than one correct answer): Check if the learner's submission is a subset of the correct answers in the solution.
+
+3. Grade coding questions 
+   - Parse learner submission (string) into code. If cannot parse, mark as failed
+   - Compare learner code's output with solution output    
+
+4. Generate report based on marking outcome
+
 ## How to grade exam
 1. Access the system via [Google Colab](https://colab.research.google.com/drive/1oaoiXxOZad97zGUsefFX9PAZ7kKg1G24?usp=sharing)
    - You will be asked to authorise access to your google drive, please just allow full access
