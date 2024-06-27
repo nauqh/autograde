@@ -147,7 +147,7 @@ class M31Marker(ExamMarkerBase):
         self.test_q15(s)
         self.test_q16(s)
 
-    def __exec_with_locals(self, index, df):
+    def __exec_with_locals(self, index, df, s):
         string = "result = " + s[index]
 
         # Create a dictionary for local variables
@@ -161,7 +161,7 @@ class M31Marker(ExamMarkerBase):
         if s[9] == "":
             self.summary['Not submitted'].append(10)
             return
-        result = self.__exec_with_locals(9, self.df)
+        result = self.__exec_with_locals(9, self.df, s)
         if self.df[self.df['TotalPay'] > self.df['TotalPay'].mean()].equals(result):
             self.summary['Correct'].append(10)
         else:
@@ -171,7 +171,7 @@ class M31Marker(ExamMarkerBase):
         if s[13] == "":
             self.summary['Not submitted'].append(14)
             return
-        result = self.__exec_with_locals(13, self.df)
+        result = self.__exec_with_locals(13, self.df, s)
         if self.df['JobTitle'].value_counts().head().equals(result):
             self.summary['Correct'].append(14)
         else:
@@ -181,7 +181,7 @@ class M31Marker(ExamMarkerBase):
         if s[14] == "":
             self.summary['Not submitted'].append(15)
             return
-        result = self.__exec_with_locals(14, self.df)
+        result = self.__exec_with_locals(14, self.df, s)
         df_top5 = self.df['JobTitle'].value_counts().head().index
         if len(self.df[self.df['JobTitle'].isin(df_top5)][['Year', 'JobTitle', 'BasePay', 'OvertimePay', 'TotalPay']]) == len(result):
             self.summary['Correct'].append(15)
@@ -192,7 +192,7 @@ class M31Marker(ExamMarkerBase):
         if s[15] == "":
             self.summary['Not submitted'].append(16)
             return
-        result = self.__exec_with_locals(15, self.df)
+        result = self.__exec_with_locals(15, self.df, s)
         df_top5 = self.df['JobTitle'].value_counts().head().index
         sample = pd.pivot_table(data=self.df[self.df['JobTitle'].isin(df_top5)],
                                 index=['JobTitle'],
