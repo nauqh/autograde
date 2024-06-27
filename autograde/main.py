@@ -120,12 +120,12 @@ class M31Marker(ExamMarkerBase):
     def check_multiple(self, submission):
         for i, answer in enumerate(submission, 1):
             solution = self.solutions.get(str(i))
+            if i >= 10:
+                i += 1
+
             if not answer:
                 self.summary['Not submitted'].append(i)
                 continue
-
-            if i >= 10:
-                i += 1
 
             if answer == solution:
                 self.summary['Correct'].append(i)
@@ -222,14 +222,24 @@ if __name__ == "__main__":
     # marker_m21.display_summary(summary_m21)
 
     marker_m31 = M31Marker()
-    submission_m31 = ['D', 'A', 'A', 'B', 'B',
-                      'A', 'C', 'A', 'D', 'C', 'A', 'C']
-    summary_m31 = marker_m31.check_multiple(submission_m31)
+    s = ['D',
+         'A',
+         'A',
+         'B',
+         'B',
+         'A',
+         'C',
+         'A',
+         'D',
+         "df[df['TotalPay'] > df['TotalPay'].mean()]",
+         'C',
+         'A',
+         '',
+         "df['JobTitle'].value_counts().head(5)",
+         "df[df['JobTitle'].isin(df['JobTitle'].value_counts().head(5).index)][['Year', 'JobTitle', 'BasePay', 'OvertimePay', 'TotalPay']]",
+         '']
+    summary_m31 = marker_m31.check_multiple(s[:9] + s[10:13])
 
-    summary_m31['Incorrect'].append(10)
-    summary_m31['Not submitted'].append(14)
-    summary_m31['Not submitted'].append(15)
-    summary_m31['Not submitted'].append(16)
     print(summary_m31)
     marker_m31.display_summary(summary_m31)
 
