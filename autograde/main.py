@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import pandas as pd
 
 
 class ExamMarkerBase(ABC):
@@ -100,6 +101,14 @@ class M31Marker(ExamMarkerBase):
     def __init__(self):
         super().__init__()
         self.exam_name = "M3.1"
+        self.__load_dataframe()
+
+    def __load_dataframe(self):
+
+        self.df = pd.read_csv(
+            'https://raw.githubusercontent.com/anhquan0412/dataset/main/Salaries.csv')
+        self.df.drop(columns=['Notes', 'Status', 'Agency'], inplace=True)
+        self.df['JobTitle'] = self.df['JobTitle'].str.title()
 
     def get_solutions(self):
         return {
@@ -132,6 +141,71 @@ class M31Marker(ExamMarkerBase):
             else:
                 self.summary['Incorrect'].append(i)
 
+    def check_expression(self, s):
+        self.test_q10(s)
+        self.test_q14(s)
+        self.test_q15(s)
+        self.test_q16(s)
+
+    def __exec_with_locals(self, index, df):
+        string = "result = " + s[index]
+
+        # Create a dictionary for local variables
+        local_vars = {'df': df}
+
+        # Execute the code with the local variables dictionary
+        exec(string, globals(), local_vars)
+        return local_vars['result']
+
+    def test_q10(self, s):
+        if s[9] == "":
+            self.summary['Not submitted'].append(10)
+            return
+        result = self.__exec_with_locals(9, self.df)
+        if self.df[self.df['TotalPay'] > self.df['TotalPay'].mean()].equals(result):
+            self.summary['Correct'].append(10)
+        else:
+            self.summary['Incorrect'].append(10)
+
+    def test_q14(self, s):
+        if s[13] == "":
+            self.summary['Not submitted'].append(14)
+            return
+        result = self.__exec_with_locals(13, self.df)
+        if self.df['JobTitle'].value_counts().head().equals(result):
+            self.summary['Correct'].append(14)
+        else:
+            self.summary['Incorrect'].append(14)
+
+    def test_q15(self, s):
+        if s[14] == "":
+            self.summary['Not submitted'].append(15)
+            return
+        result = self.__exec_with_locals(14, self.df)
+        df_top5 = self.df['JobTitle'].value_counts().head().index
+        if len(self.df[self.df['JobTitle'].isin(df_top5)][['Year', 'JobTitle', 'BasePay', 'OvertimePay', 'TotalPay']]) == len(result):
+            self.summary['Correct'].append(15)
+        else:
+            self.summary['Incorrect'].append(15)
+
+    def test_q16(self, s):
+        if s[15] == "":
+            self.summary['Not submitted'].append(16)
+            return
+        result = self.__exec_with_locals(15, self.df)
+        df_top5 = self.df['JobTitle'].value_counts().head().index
+        sample = pd.pivot_table(data=self.df[self.df['JobTitle'].isin(df_top5)],
+                                index=['JobTitle'],
+                                columns=['Year'],
+                                values=['BasePay', 'OvertimePay', 'TotalPay'])
+        if len(sample) == len(result):
+            self.summary['Correct'].append(16)
+        else:
+            self.summary['Incorrect'].append(16)
+
+    def mark_exam(self, submission):
+        self.check_multiple(submission[:9] + submission[10:13])
+        self.check_expression(submission)
         return self.summary
 
     def display_summary(self, summary):
@@ -238,7 +312,8 @@ if __name__ == "__main__":
          "df['JobTitle'].value_counts().head(5)",
          "df[df['JobTitle'].isin(df['JobTitle'].value_counts().head(5).index)][['Year', 'JobTitle', 'BasePay', 'OvertimePay', 'TotalPay']]",
          '']
-    summary_m31 = marker_m31.check_multiple(s[:9] + s[10:13])
+
+    summary_m31 = marker_m31.mark_exam(s)
 
     print(summary_m31)
     marker_m31.display_summary(summary_m31)
