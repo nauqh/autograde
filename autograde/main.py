@@ -1,5 +1,13 @@
 from abc import ABC, abstractmethod
 import pandas as pd
+import re
+
+"""
+Issues:
+    - Missing submission -> Must complete exam in one session
+    - Irrelevant submission of functions -> Marked as incorrect
+    - Wrong function name -> Marked as incorrect
+"""
 
 
 class ExamMarkerBase(ABC):
@@ -63,6 +71,14 @@ class M21Marker(ExamMarkerBase):
 
         return self.summary
 
+    def check_functions(self, s):
+        self.test_q9(s)
+        self.test_q10(s)
+        self.test_q11(s)
+        self.test_q12(s)
+        self.test_q13(s)
+        self.test_q14(s)
+
     def __evaluate_special_cases(self, i, answer, correct_answers):
         correct_parts = [part.upper() for part in correct_answers.split(',')]
         submitted_parts = [part.upper() for part in answer.split(',')]
@@ -73,6 +89,168 @@ class M21Marker(ExamMarkerBase):
             self.summary['Partial'].append(i)
         else:
             self.summary['Incorrect'].append(i)
+
+    def test_q9(self, s):
+        if s[8] == '':
+            self.summary['Not submitted'].append(9)
+            return
+        func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
+                             rf'def count_min(', s[8], count=1)
+        my_list_1 = [0, 1, 3, 2, 8, 0, 9, 10, 0, 5]
+        my_list_2 = [-3, 0, 3, 4, 2, -1, 9, 6]
+
+        local_vars = {}
+        exec(func_string, globals(), local_vars)
+        try:
+            count_min = local_vars['count_min']
+        except KeyError:
+            print("Q9: function count_min not found")
+            self.summary['Incorrect'].append(9)
+            return
+
+        if count_min(my_list_1) == 3 and count_min(my_list_2) == 1:
+            self.summary['Correct'].append(9)
+        else:
+            self.summary['Incorrect'].append(9)
+
+    def test_q10(self, s):
+        if s[9] == '':
+            self.summary['Not submitted'].append(10)
+            return
+
+        func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
+                             rf'def calculate_range(', s[9], count=1)
+        my_tuple_1 = (0, 1, 3, 2, 8, 0, 9, 10, 0, 5)
+        my_tuple_2 = (-3, 0, 3, 4, 2, -1, 9, 6)
+
+        local_vars = {}
+        exec(func_string, globals(), local_vars)
+        try:
+            calculate_range = local_vars['calculate_range']
+        except KeyError:
+            print("Q10: function calculate_range not found")
+            self.summary['Incorrect'].append(9)
+            return
+
+        if calculate_range(my_tuple_1) == 10 and calculate_range(my_tuple_2) == 12:
+            self.summary['Correct'].append(10)
+        else:
+            self.summary['Incorrect'].append(10)
+
+    def test_q11(self, s):
+        if s[10] == '':
+            self.summary['Not submitted'].append(11)
+            return
+
+        func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
+                             rf'def extract_email(', s[10], count=1)
+        local_vars = {}
+        exec(func_string, globals(), local_vars)
+        try:
+            extract_email = local_vars['extract_email']
+        except KeyError:
+            print("Q11: function extract_email not found")
+            self.summary['Incorrect'].append(11)
+            return
+
+        if extract_email('chinh.nguyen@coderschool.vn', True) == 'chinh.nguyen' \
+                and extract_email('alexa1234@gmail.com', False) == 'gmail.com' \
+                and extract_email('Joh*_D03+14/12@obviousscam.com', True) == 'Joh*_D03+14/12':
+            self.summary['Correct'].append(11)
+        else:
+            self.summary['Incorrect'].append(11)
+
+    def test_q12(self, s):
+        if s[11] == '':
+            self.summary['Not submitted'].append(12)
+            return
+
+        func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
+                             rf'def item_calculator(', s[11], count=1)
+        item_1 = {'unit_weight': 1.5, 'unit_price': 2, 'number_of_units': 5}
+        item_2 = {'unit_weight': 2.3, 'unit_price': 0.4, 'number_of_units': 3}
+
+        local_vars = {}
+        exec(func_string, globals(), local_vars)
+        try:
+            item_calculator = local_vars['item_calculator']
+        except KeyError:
+            print("Q12: function item_calculator not found")
+            self.summary['Incorrect'].append(12)
+            return
+
+        if item_calculator(item_1, True) == 7.5 and item_calculator(item_1, False) == 10:
+            self.summary['Correct'].append(12)
+        else:
+            self.summary['Incorrect'].append(12)
+
+    def test_q13(self, s):
+        receipt_1 = {
+            'milk':   {'unit_weight': 1, 'unit_price': 10, 'number_of_units': 3},
+            'rice':   {'unit_weight': 2, 'unit_price': 5, 'number_of_units': 4},
+            'cookie': {'unit_weight': 0.2, 'unit_price': 2, 'number_of_units': 10},
+            'sugar':  {'unit_weight': 0.5, 'unit_price': 7, 'number_of_units': 2},
+        }
+
+        receipt_2 = {
+            'chair': {'unit_weight': 4.5, 'unit_price': 15, 'number_of_units': 2},
+            'desk':  {'unit_weight': 10, 'unit_price': 22.5,  'number_of_units': 1}
+        }
+        if s[12] == '':
+            self.summary['Not submitted'].append(13)
+            return
+
+        func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
+                             rf'def heaviest_item(', s[12], count=1)
+        local_vars = {}
+        exec(func_string, globals(), local_vars)
+        try:
+            heaviest_item = local_vars['heaviest_item']
+        except KeyError:
+            print("Q13: function heaviest_item not found")
+            self.summary['Incorrect'].append(13)
+            return
+
+        if heaviest_item(receipt_1) == 'rice' and heaviest_item(receipt_2) == 'desk':
+            self.summary['Correct'].append(13)
+        else:
+            self.summary['Incorrect'].append(13)
+
+    def test_q14(self, s):
+        receipt_1 = {
+            'milk':   {'unit_weight': 1, 'unit_price': 10, 'number_of_units': 3},
+            'rice':   {'unit_weight': 2, 'unit_price': 5, 'number_of_units': 4},
+            'cookie': {'unit_weight': 0.2, 'unit_price': 2, 'number_of_units': 10},
+            'sugar':  {'unit_weight': 0.5, 'unit_price': 7, 'number_of_units': 2},
+        }
+
+        receipt_2 = {
+            'chair': {'unit_weight': 4.5, 'unit_price': 15, 'number_of_units': 2},
+            'desk':  {'unit_weight': 10, 'unit_price': 22.5,  'number_of_units': 1}
+        }
+        if s[13] == '':
+            self.summary['Not submitted'].append(14)
+            return
+
+        func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
+                             rf'def priciest_item(', s[13], count=1)
+        local_vars = {}
+        exec(func_string, globals(), local_vars)
+        try:
+            priciest_item = local_vars['priciest_item']
+        except KeyError:
+            print("Q14: function priciest_item not found")
+            self.summary['Incorrect'].append(14)
+            return
+        if priciest_item(receipt_1) == 'milk' and priciest_item(receipt_2) == 'chair':
+            self.summary['Correct'].append(14)
+        else:
+            self.summary['Incorrect'].append(14)
+
+    def mark_exam(self, submission):
+        self.check_multiple(submission[:8])
+        self.check_functions(submission)
+        return self.summary
 
     def display_summary(self, summary):
         print(f"{self.exam_name} - EXAM SUMMARY")
@@ -289,34 +467,46 @@ class M12Marker(ExamMarkerBase):
 
 
 if __name__ == "__main__":
-    # marker_m21 = M21Marker()
-    # submission_m21 = ['A', '', 'c,e', 'B', 'E', 'A,C', 'A,C,D', 'A']
-    # summary_m21 = marker_m21.check_multiple(submission_m21)
-    # print(summary_m21)
-    # marker_m21.display_summary(summary_m21)
+    marker_m21 = M21Marker()
+    submission_m21 = ['A',
+                      'B',
+                      'c,e',
+                      'B',
+                      'E',
+                      'A,C',
+                      'C,D',
+                      'C',
+                      'def smallest (mylist):\n      if not mylist:\n        return 0 \n      smallest_number = min(mylist)\n      count = mylist.count(smallest_number)\n      return count',
+                      'def calculate_range (myt1):\n      if not myt1:\n        return 0 \n      smallest_number = min(myt1)\n      maximun_number = max(myt1)\n      range = max(myt1) - min(myt1)\n      return range',
+                      '',
+                      "def calculate(item, return_weight):\n    unit_weight = item.get('unit_weight', 0)\n    unit_price = item.get('unit_price', 0)\n    number_of_units = item.get('number_of_units', 0)\n    \n    total_weight = unit_weight * number_of_units\n    total_price = unit_price * number_of_units\n    \n    if return_weight:\n        return total_weight\n    else:\n        return total_price",
+                      "def heaviest_item(receipt):\n    heaviest_name = None\n    heaviest_weight = 0\n    \n    for item_name, item_details in receipt.items():\n        total_weight = item_details['unit_weight'] * item_details['number_of_units']\n        if total_weight > heaviest_weight:\n            heaviest_weight = total_weight\n            heaviest_name = item_name\n            \n    return heaviest_name",
+                      "def priciest_item(receipt):\n    priciest_name = None\n    highest_price = 0\n    \n    for item_name, item_details in receipt.items():\n        total_price = item_details['unit_price'] * item_details['number_of_units']\n        if total_price > highest_price:\n            highest_price = total_price\n            priciest_name = item_name\n            \n    return priciest_name"]
+    summary_m21 = marker_m21.mark_exam(submission_m21)
+    marker_m21.display_summary(summary_m21)
 
-    marker_m31 = M31Marker()
-    s = ['D',
-         'A',
-         'A',
-         'B',
-         'B',
-         'A',
-         'C',
-         'A',
-         'D',
-         "df[df['TotalPay'] > df['TotalPay'].mean()]",
-         'C',
-         'A',
-         '',
-         "df['JobTitle'].value_counts().head(5)",
-         "df[df['JobTitle'].isin(df['JobTitle'].value_counts().head(5).index)][['Year', 'JobTitle', 'BasePay', 'OvertimePay', 'TotalPay']]",
-         '']
+    # marker_m31 = M31Marker()
+    # s = ['D',
+    #      'A',
+    #      'A',
+    #      'B',
+    #      'B',
+    #      'A',
+    #      'C',
+    #      'A',
+    #      'D',
+    #      "df[df['TotalPay'] > df['TotalPay'].mean()]",
+    #      'C',
+    #      'A',
+    #      '',
+    #      "df['JobTitle'].value_counts().head(5)",
+    #      "df[df['JobTitle'].isin(df['JobTitle'].value_counts().head(5).index)][['Year', 'JobTitle', 'BasePay', 'OvertimePay', 'TotalPay']]",
+    #      '']
 
-    summary_m31 = marker_m31.mark_exam(s)
+    # summary_m31 = marker_m31.mark_exam(s)
 
-    print(summary_m31)
-    marker_m31.display_summary(summary_m31)
+    # print(summary_m31)
+    # marker_m31.display_summary(summary_m31)
 
     # marker_m12 = M12Marker()
     # submission_m12 = ['B', 'B', 'D', 'C', 'D',
