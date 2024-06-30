@@ -100,7 +100,11 @@ class M21Marker(ExamMarkerBase):
         my_list_2 = [-3, 0, 3, 4, 2, -1, 9, 6]
 
         local_vars = {}
-        exec(func_string, globals(), local_vars)
+        try:
+            exec(func_string, globals(), local_vars)
+        except Exception as e:
+            print(
+                f"Q9: Error occurred while executing function count_min - {e}")
         try:
             count_min = local_vars['count_min']
         except KeyError:
@@ -124,12 +128,16 @@ class M21Marker(ExamMarkerBase):
         my_tuple_2 = (-3, 0, 3, 4, 2, -1, 9, 6)
 
         local_vars = {}
-        exec(func_string, globals(), local_vars)
+        try:
+            exec(func_string, globals(), local_vars)
+        except Exception as e:
+            print(
+                f"Q10: Error occurred while executing function calculate_range - {e}")
         try:
             calculate_range = local_vars['calculate_range']
         except KeyError:
             print("Q10: function calculate_range not found")
-            self.summary['Incorrect'].append(9)
+            self.summary['Incorrect'].append(10)
             return
 
         if calculate_range(my_tuple_1) == 10 and calculate_range(my_tuple_2) == 12:
@@ -145,7 +153,12 @@ class M21Marker(ExamMarkerBase):
         func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
                              rf'def extract_email(', s[10], count=1)
         local_vars = {}
-        exec(func_string, globals(), local_vars)
+
+        try:
+            exec(func_string, globals(), local_vars)
+        except Exception as e:
+            print(
+                f"Q11: Error occurred while executing function extract_email - {e}")
         try:
             extract_email = local_vars['extract_email']
         except KeyError:
@@ -171,7 +184,12 @@ class M21Marker(ExamMarkerBase):
         item_2 = {'unit_weight': 2.3, 'unit_price': 0.4, 'number_of_units': 3}
 
         local_vars = {}
-        exec(func_string, globals(), local_vars)
+
+        try:
+            exec(func_string, globals(), local_vars)
+        except Exception as e:
+            print(
+                f"Q12: Error occurred while executing function item_calculator - {e}")
         try:
             item_calculator = local_vars['item_calculator']
         except KeyError:
@@ -203,7 +221,12 @@ class M21Marker(ExamMarkerBase):
         func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
                              rf'def heaviest_item(', s[12], count=1)
         local_vars = {}
-        exec(func_string, globals(), local_vars)
+
+        try:
+            exec(func_string, globals(), local_vars)
+        except Exception as e:
+            print(
+                f"Q13: Error occurred while executing function heaviest_item - {e}")
         try:
             heaviest_item = local_vars['heaviest_item']
         except KeyError:
@@ -235,7 +258,12 @@ class M21Marker(ExamMarkerBase):
         func_string = re.sub(r'^\s*def\s+(\w+)\s*\(',
                              rf'def priciest_item(', s[13], count=1)
         local_vars = {}
-        exec(func_string, globals(), local_vars)
+        try:
+            exec(func_string, globals(), local_vars)
+        except Exception as e:
+            print(
+                f"Q14: Error occurred while executing function priciest_item - {e}")
+
         try:
             priciest_item = local_vars['priciest_item']
         except KeyError:
@@ -476,12 +504,12 @@ if __name__ == "__main__":
                       'A,C',
                       'C,D',
                       'C',
-                      'def smallest (mylist):\n      if not mylist:\n        return 0 \n      smallest_number = min(mylist)\n      count = mylist.count(smallest_number)\n      return count',
-                      'def calculate_range (myt1):\n      if not myt1:\n        return 0 \n      smallest_number = min(myt1)\n      maximun_number = max(myt1)\n      range = max(myt1) - min(myt1)\n      return range',
+                      'def count_min(my_list_1):\n    min_number = my_list_1[0]  \n    for num in my_list_1[1:]:\n        if num < min_number:\n            min_number = num\n    count = 0\n    for num in my_list_1:\n        if num == min_number:\n            count += 1\n    \n    return count\nmy_list_1= [0, 1, 3, 2, 8, 0, 9, 10, 0, 5]\nprint(count_min(my_list_1)) \n\n\n\ndef count_min(my_list_2):\n    min_number = my_list_2[0]  \n    for num in my_list_2[1:]:\n        if num < min_number:\n            min_number = num\n    count = 0\n    for num in my_list_2:\n        if num == min_number:\n            count += 1\n    \n    return count\n\nmy_list_2 = [-3, 0, 3, 4, 2, -1, 9, 6]\nprint(count_min(my_list_2))',
+                      'def max_min_difference(tup):\n    max_value = max(tup)\n    min_value = min(tup)\n    return max_value - min_value\nmy_tuple_1 = (0, 1, 3, 2, 8, 0, 9, 10, 0, 5)\nprint(max_min_difference(my_tuple_1))\n\ndef max_min_difference(tup):\n    max_value = max(tup)\n    min_value = min(tup)\n    return max_value - min_value\n\nmy_tuple_2 = (-3, 0, 3, 4, 2, -1, 9, 6)\nprint(max_min_difference(my_tuple_2))',
+                      'def extract_info(email, return_username=True):\n    at_index = email.find(\'@\')\n  \n    if at_index == -1:\n        return ""  \n    \n    if return_username:\n        return email[:at_index]  \n    else:\n        return email[at_index + 1:]  \n\nemail_address = "chinh.nguyen@coderschool.vn"\nprint(extract_info(email_address, return_username=True))  \n\n\ndef extract_info(email, return_username=True):\n    at_index = email.find(\'@\')\n  \n    if at_index == -1:\n        return ""  \n    \n    if return_username:\n        return email[:at_index]  \n    else:\n        return email[at_index + 1:]  \n\nemail_address = "alexa1234@gmail.com"\nprint(extract_info(email_address, return_username=False))  \n\n\ndef extract_info(email, return_username=True):\n    at_index = email.find(\'@\')\n  \n    if at_index == -1:\n        return ""  \n    \n    if return_username:\n        return email[:at_index]  \n    else:\n        return email[at_index + 1:]  \n\nemail_address = "Joh*_D03+14/12@obviousscam.com"\nprint(extract_info(email_address, return_username=True))',
+                      "def calculate_total(item, return_weight=True):\n    unit_weight = item['unit_weight']\n    unit_price = item['unit_price']\n    number_of_units = item['number_of_units']\n    \n    total_weight = unit_weight * number_of_units\n    total_price = unit_price * number_of_units\n    \n    if return_weight:\n        return total_weight\n    else:\n        return total_price\n\nitem_1 = {'unit_weight': 1.5, 'unit_price': 2, 'number_of_units': 5}\nprint(calculate_total(item_1, return_weight=True))  \nprint(calculate_total(item_1, return_weight=False))",
                       '',
-                      "def calculate(item, return_weight):\n    unit_weight = item.get('unit_weight', 0)\n    unit_price = item.get('unit_price', 0)\n    number_of_units = item.get('number_of_units', 0)\n    \n    total_weight = unit_weight * number_of_units\n    total_price = unit_price * number_of_units\n    \n    if return_weight:\n        return total_weight\n    else:\n        return total_price",
-                      "def heaviest_item(receipt):\n    heaviest_name = None\n    heaviest_weight = 0\n    \n    for item_name, item_details in receipt.items():\n        total_weight = item_details['unit_weight'] * item_details['number_of_units']\n        if total_weight > heaviest_weight:\n            heaviest_weight = total_weight\n            heaviest_name = item_name\n            \n    return heaviest_name",
-                      "def priciest_item(receipt):\n    priciest_name = None\n    highest_price = 0\n    \n    for item_name, item_details in receipt.items():\n        total_price = item_details['unit_price'] * item_details['number_of_units']\n        if total_price > highest_price:\n            highest_price = total_price\n            priciest_name = item_name\n            \n    return priciest_name"]
+                      '']
     summary_m21 = marker_m21.mark_exam(submission_m21)
     marker_m21.display_summary(summary_m21)
 
