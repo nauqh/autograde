@@ -166,10 +166,25 @@ class M21Marker(ExamMarkerBase):
             self.summary['Incorrect'].append(11)
             return
 
-        if extract_email('chinh.nguyen@coderschool.vn', True) == 'chinh.nguyen' \
-                and extract_email('alexa1234@gmail.com', False) == 'gmail.com' \
-                and extract_email('Joh*_D03+14/12@obviousscam.com', True) == 'Joh*_D03+14/12':
+        correct_count = 0
+        try:
+            if extract_email('chinh.nguyen@coderschool.vn', True) == 'chinh.nguyen':
+                correct_count += 1
+            if extract_email('alexa1234@gmail.com', False) == 'gmail.com':
+                correct_count += 1
+            if extract_email('Joh*_D03+14/12@obviousscam.com', True) == 'Joh*_D03+14/12':
+                correct_count += 1
+        except Exception:
+            if correct_count > 0:
+                self.summary['Partial'].append(11)
+            else:
+                self.summary['Incorrect'].append(11)
+            return
+
+        if correct_count == 3:
             self.summary['Correct'].append(11)
+        elif correct_count > 0:
+            self.summary['Partial'].append(11)
         else:
             self.summary['Incorrect'].append(11)
 
@@ -497,19 +512,19 @@ class M12Marker(ExamMarkerBase):
 if __name__ == "__main__":
     marker_m21 = M21Marker()
     submission_m21 = ['A',
-                      'B',
+                      'C',
                       'c,e',
                       'B',
                       'E',
                       'A,C',
                       'C,D',
                       'C',
-                      'def count_min(my_list_1):\n    min_number = my_list_1[0]  \n    for num in my_list_1[1:]:\n        if num < min_number:\n            min_number = num\n    count = 0\n    for num in my_list_1:\n        if num == min_number:\n            count += 1\n    \n    return count\nmy_list_1= [0, 1, 3, 2, 8, 0, 9, 10, 0, 5]\nprint(count_min(my_list_1)) \n\n\n\ndef count_min(my_list_2):\n    min_number = my_list_2[0]  \n    for num in my_list_2[1:]:\n        if num < min_number:\n            min_number = num\n    count = 0\n    for num in my_list_2:\n        if num == min_number:\n            count += 1\n    \n    return count\n\nmy_list_2 = [-3, 0, 3, 4, 2, -1, 9, 6]\nprint(count_min(my_list_2))',
-                      'def max_min_difference(tup):\n    max_value = max(tup)\n    min_value = min(tup)\n    return max_value - min_value\nmy_tuple_1 = (0, 1, 3, 2, 8, 0, 9, 10, 0, 5)\nprint(max_min_difference(my_tuple_1))\n\ndef max_min_difference(tup):\n    max_value = max(tup)\n    min_value = min(tup)\n    return max_value - min_value\n\nmy_tuple_2 = (-3, 0, 3, 4, 2, -1, 9, 6)\nprint(max_min_difference(my_tuple_2))',
-                      'def extract_info(email, return_username=True):\n    at_index = email.find(\'@\')\n  \n    if at_index == -1:\n        return ""  \n    \n    if return_username:\n        return email[:at_index]  \n    else:\n        return email[at_index + 1:]  \n\nemail_address = "chinh.nguyen@coderschool.vn"\nprint(extract_info(email_address, return_username=True))  \n\n\ndef extract_info(email, return_username=True):\n    at_index = email.find(\'@\')\n  \n    if at_index == -1:\n        return ""  \n    \n    if return_username:\n        return email[:at_index]  \n    else:\n        return email[at_index + 1:]  \n\nemail_address = "alexa1234@gmail.com"\nprint(extract_info(email_address, return_username=False))  \n\n\ndef extract_info(email, return_username=True):\n    at_index = email.find(\'@\')\n  \n    if at_index == -1:\n        return ""  \n    \n    if return_username:\n        return email[:at_index]  \n    else:\n        return email[at_index + 1:]  \n\nemail_address = "Joh*_D03+14/12@obviousscam.com"\nprint(extract_info(email_address, return_username=True))',
-                      "def calculate_total(item, return_weight=True):\n    unit_weight = item['unit_weight']\n    unit_price = item['unit_price']\n    number_of_units = item['number_of_units']\n    \n    total_weight = unit_weight * number_of_units\n    total_price = unit_price * number_of_units\n    \n    if return_weight:\n        return total_weight\n    else:\n        return total_price\n\nitem_1 = {'unit_weight': 1.5, 'unit_price': 2, 'number_of_units': 5}\nprint(calculate_total(item_1, return_weight=True))  \nprint(calculate_total(item_1, return_weight=False))",
-                      '',
-                      '']
+                      'def count_min(l):\n    i = 0\n    m = min(l)\n    for j in l:\n        if j == m:\n            i = i + 1\n    return(i)',
+                      'def calculate_range(tup):\n    mn = min(tup)\n    mx = max(tup)\n    return(mx - mn)',
+                      'def extract_email(emilz = "", snd_arg = True):\n    stri = str(emilz)\n    pattern = r"^([\\w\\d.]+)@([\\w\\d.]+)$"\n    match_obj = re.search(pattern, emilz)\n    if snd_arg == True:\n        return(match_obj.group(1))\n    else:\n        return(match_obj.group(2))',
+                      "def item_calculator(item, arg):\n    if arg == True:\n        return(item['unit_weight']*item['number_of_units'])\n    else:\n        return(item['unit_price']*item['number_of_units'])",
+                      "def heaviest_item(receipt):\n    mx_w = 0\n    k = ''\n    for x, obj in receipt.items():\n        #print(x)\n        for y in obj:\n            iw = obj['unit_weight']*obj['number_of_units']\n            if mx_w < iw:\n                mx_w = iw\n                k = x\n    return(k)",
+                      "def priciest_item(receipt):\n    mx_p = 0\n    k = ''\n    for x, obj in receipt.items():\n        #print(x)\n        for y in obj:\n            ip = obj['unit_price']*obj['number_of_units']\n            if mx_p < ip:\n                mx_p = ip\n                k = x\n    # print(mx_p)\n    return(k)"]
     summary_m21 = marker_m21.mark_exam(submission_m21)
     marker_m21.display_summary(summary_m21)
 
