@@ -509,6 +509,61 @@ class M12Marker(ExamMarkerBase):
         print(f"FINAL SCORE: {final_score}/100")
 
 
+class M11Marker(ExamMarkerBase):
+    def __init__(self):
+        super().__init__()
+        self.exam_name = "M1.1"
+
+    def get_solutions(self):
+        return {
+            "1": "A",
+            "2": "B",
+            "3": "A",
+            "4": "B",
+            "5": "B",
+            "6": ["B", "D"],
+            "7": "C",
+            "8": "B",
+            "9": ["C", "D"],
+            "10": "B",
+            "11": ["A", "B"],
+            "12": ["A", "D"],
+            "13": "3",
+            "14": "200",
+            "15": "B"
+        }
+
+    def check_multiple(self, submission):
+        for i, answer in enumerate(submission, 1):
+            solution = self.solutions.get(str(i))
+            if not answer:
+                self.summary['Not submitted'].append(i)
+                continue
+
+            if answer == solution:
+                self.summary['Correct'].append(i)
+            else:
+                self.summary['Incorrect'].append(i)
+
+        return self.summary
+
+    def display_summary(self, summary):
+        print(f"{self.exam_name} - EXAM SUMMARY")
+
+        for key, value in summary.items():
+            print(f"{key}: {len(value)}")
+            for question in value:
+                if key == 'Correct':
+                    score = '2/2'
+                else:
+                    score = '0/2'
+                print(f"  - Q{question} ({score})")
+
+        final_score = sum([10 if q in (6, 8, 9, 13, 14)
+                          else 2 for q in summary.get('Correct', [])])
+        print(f"FINAL SCORE: {final_score}/100")
+
+
 if __name__ == "__main__":
     marker_m21 = M21Marker()
     submission_m21 = ['A',
