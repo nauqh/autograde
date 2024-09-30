@@ -62,7 +62,6 @@ class M11Marker(ExamMarkerBase):
 
             if answer:
                 if is_sql:
-                    answer = answer.replace("\n", " ").replace("\\", "")
                     correct = Utils.check_sql(answer, solution, self.conn)
                 else:
                     correct = answer == solution
