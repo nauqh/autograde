@@ -155,10 +155,7 @@ class Utils():
             df_sub = pd.read_sql_query(answer, connection)
             df_sol = pd.read_sql_query(solution, connection)
             if cls.is_equal(df_sub, df_sol, same_col_name=False):
-                cls.printt('You passed! Good job!')
                 return True
-
-            cls.printt("Your solution is not correct, try again!")
             return False
         except Exception as e:
             cls.printt(f'Something went wrong. {e}')
