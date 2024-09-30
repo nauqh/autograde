@@ -159,7 +159,7 @@ class Utils():
             return False
         except Exception as e:
             cls.printt(f'Something went wrong. {e}')
-            return 'INVALID'
+            return False
 
     @classmethod
     def check_available(cls, variables, dict):

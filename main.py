@@ -1,7 +1,3 @@
-"""
-Exam Marker V2
-"""
-
 from abc import ABC, abstractmethod
 import json
 import sqlite3
@@ -26,15 +22,30 @@ class ExamMarkerBase(ABC):
         pass
 
     @abstractmethod
-    def check_multiple(self, submission):
+    def mark_submission(self, submission):
         pass
 
     @abstractmethod
     def display_summary(self, submission):
         pass
 
+    def update_summary(self, question_number, correct):
+        if correct is None:
+            self.summary['Not submitted'].append(question_number)
+        elif correct:
+            self.summary['Correct'].append(question_number)
+        else:
+            self.summary['Incorrect'].append(question_number)
+
 
 class M11Marker(ExamMarkerBase):
+    QUESTION_SCORES = {
+        range(1, 6): 2,
+        range(6, 10): 3,
+        range(10, 16): 8,
+        range(16, 21): 6,
+    }
+
     def __init__(self):
         super().__init__()
         self.exam_name = "M1.1"
@@ -42,36 +53,35 @@ class M11Marker(ExamMarkerBase):
 
     def get_solutions(self):
         with open('solutions/M11.json', 'r') as file:
-            solutions = json.load(file)
-        return solutions
+            return json.load(file)
 
-    def check_multiple(self, submission):
-        for i, answer in enumerate(submission, 1):
+    def check_submission(self, submission, is_sql=False, start_index=1):
+        for i, answer in enumerate(submission, start_index):
             solution = self.solutions.get(str(i))
-            if not answer:
-                self.summary['Not submitted'].append(i)
-                continue
+            correct = None
 
-            if answer == solution:
-                self.summary['Correct'].append(i)
-            else:
-                self.summary['Incorrect'].append(i)
+            if answer:
+                if is_sql:
+                    answer = answer.replace("\n", " ").replace("\\", "")
+                    correct = Utils.check_sql(answer, solution, self.conn)
+                else:
+                    correct = answer == solution
 
+            self.update_summary(i, correct)
+
+    def mark_submission(self, submission):
+        self.check_submission(submission[:5], is_sql=False, start_index=1)
+        self.check_submission(submission[5:], is_sql=True, start_index=6)
         return self.summary
 
-    def check_sql(self, submission):
-        for i, answer in enumerate(submission, 6):
-            solution = self.solutions.get(str(i))
-            if not answer:
-                self.summary['Not submitted'].append(i)
-                continue
+    def calculate_score(self, question_number):
+        for question_range, score in self.QUESTION_SCORES.items():
+            if question_number in question_range:
+                return score
+        return 0
 
-            if Utils.check_sql(answer, solution, self.conn):
-                self.summary['Correct'].append(i)
-            else:
-                self.summary['Incorrect'].append(i)
-
-        return self.summary
+    def calculate_final_score(self):
+        return sum(self.calculate_score(q) for q in self.summary['Correct'])
 
     def display_summary(self, summary):
         print(f"{self.exam_name} - EXAM SUMMARY")
@@ -79,26 +89,10 @@ class M11Marker(ExamMarkerBase):
         for key, value in summary.items():
             print(f"{key}: {len(value)}")
             for question in value:
-                if 1 <= question <= 5:
-                    score = '2/2' if key == 'Correct' else '0/2'
-                elif 6 <= question <= 9:
-                    score = '3/3' if key == 'Correct' else '0/3'
-                elif 10 <= question <= 15:
-                    score = '8/8' if key == 'Correct' else '0/8'
-                elif 16 <= question <= 20:
-                    score = '6/6' if key == 'Correct' else '0/6'
-                else:
-                    score = '0/0'
+                score = f"{self.calculate_score(question)}/{self.calculate_score(question)}" if key == 'Correct' else "0"
                 print(f"  - Q{question} ({score})")
 
-        final_score = sum([
-            2 if 1 <= q <= 5 else
-            3 if 6 <= q <= 9 else
-            8 if 10 <= q <= 15 else
-            6 if 16 <= q <= 20 else 0
-            for q in summary.get('Correct', [])
-        ])
-
+        final_score = self.calculate_final_score()
         print(f"FINAL SCORE: {final_score}/100")
 
 
@@ -111,6 +105,5 @@ if __name__ == '__main__':
     s = [question['answer'] for question in submission]
 
     marker = M11Marker()
-    summary = marker.check_multiple(s[:5])
-    summary = marker.check_sql(s[5:])
-    marker.display_summary(summary)
+    marker.mark_submission(s)
+    marker.display_summary(marker.summary)
